@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Calendar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        --bg: #fbfbfb;
+        --card: #ffffff;
+        --text: #111;
+        --muted: #6b7280;
+        --border: #e5e7eb;
+        --shadow: 0 1px 2px rgba(0,0,0,0.04);
+      }
+
+      body {
+        margin: 18px;
+        max-width: 900px;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        color: var(--text);
+        background: var(--bg);
+      }
+
+      a { color: inherit; text-decoration: none; }
+      .muted { color: var(--muted); }
+
+      .bar { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom: 10px; }
+      .btn {
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        padding: 10px 12px;
+        border:1px solid var(--border);
+        border-radius: 12px;
+        background: var(--card);
+        box-shadow: var(--shadow);
+        font-weight: 650;
+      }
+      .title { font-weight: 900; font-size: 1.25rem; letter-spacing: -0.01em; }
+
+      .legend { margin: 10px 0 12px 0; display:flex; gap: 10px; flex-wrap:wrap; align-items:center; }
+      .pill { padding: 6px 10px; border-radius: 999px; background:#f3f4f6; font-size: 0.92rem; }
+
+      table { width:100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); }
+      th { padding: 10px 6px; color: var(--muted); font-weight: 800; background: #f9fafb; }
+      td { border-top: 1px solid var(--border); border-right: 1px solid var(--border); height: 74px; vertical-align: top; padding: 10px; }
+      tr td:last-child { border-right: none; }
+      .daynum { font-weight: 850; }
+      .other { background: #fcfcfd; color:#9ca3af; }
+      .today { outline: 2px solid #111; outline-offset: -2px; }
+    </style>
+  </head>
+  <body>
+    <div class="bar">
+      <a class="btn" href="{{ url_for('calendar_view', ym=prev_month.strftime('%Y-%m')) }}">← Prev</a>
+      <div class="title">{{ current.strftime('%B %Y') }}</div>
+      <a class="btn" href="{{ url_for('calendar_view', ym=next_month.strftime('%Y-%m')) }}">Next →</a>
+    </div>
+
+    <div class="legend muted">
+      <span class="pill">Tap a day to open reading</span>
+      <span class="pill">Outlined = today</span>
+      <a class="btn" href="{{ url_for('day_view', day=today.isoformat()) }}">Today’s Readings</a>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for week in weeks %}
+          <tr>
+            {% for d in week %}
+              {% set is_other = (d.month != current.month) %}
+              {% set iso = d.isoformat() %}
+              {% set is_today = (d == today) %}
+              {% set in_bounds = (d >= min_day and d <= max_day) %}
+
+              <td class="
+                    {% if is_other %}other{% endif %}
+                    {% if is_today %}today{% endif %}
+                  ">
+                {% if in_bounds %}
+                  <a href="{{ url_for('day_view', day=iso) }}">
+                    <span class="daynum">{{ d.day }}</span>
+                  </a>
+                {% else %}
+                  <span class="daynum">{{ d.day }}</span>
+                {% endif %}
+              </td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <p class="muted" style="margin-top:14px;">
+      Range limited to {{ min_day.isoformat() }} through {{ max_day.isoformat() }} while developing.
+    </p>
+  </body>
+</html>
