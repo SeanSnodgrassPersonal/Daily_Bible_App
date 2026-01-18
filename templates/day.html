@@ -121,7 +121,7 @@
     <div class="daypicker" aria-label="Day navigation">
       <a class="btn" href="{{ url_for('day_view', day=prev_day.isoformat()) }}">← {{ prev_day.strftime('%m-%d') }}</a>
       <a class="btn today" href="{{ url_for('day_view', day=today.isoformat()) }}">Today</a>
-      <a class="btn" href="{{ url_for('day_view', day=next_day.isoformat()) }}">{{ prev_day.strftime('%m-%d') }} →</a>
+      <a class="btn" href="{{ url_for('day_view', day=next_day.isoformat()) }}">{{ next_day.strftime('%m-%d') }} →</a>
     </div>
 
 
