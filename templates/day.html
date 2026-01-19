@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Daily Bible Reading{% endblock %}
+{% block title %}Daily Bible{% endblock %}
 
 {% block head %}
   <link rel="stylesheet" href="{{ url_for('static', filename='day.css') }}" />
@@ -8,6 +8,8 @@
 
 {% block body_attrs %}
   class="day-page"
+  data-prev-url="{{ url_for('day_view', day=prev_day.isoformat()) }}"
+  data-next-url="{{ url_for('day_view', day=next_day.isoformat()) }}"
 {% endblock %}
 
 {% block header_subtitle %}
@@ -25,5 +27,17 @@
       <pre>{{ p.text }}</pre>
     </div>
   {% endfor %}
+
+  <!-- Sticky / fixed bottom day picker -->
+  <div class="daypicker-wrap" aria-label="Day navigation">
+    <div class="daypicker">
+      <a class="btn" href="{{ url_for('day_view', day=prev_day.isoformat()) }}">← {{ prev_day.strftime('%m-%d') }}</a>
+      <a class="btn today" href="{{ url_for('day_view', day=today.isoformat()) }}">Today</a>
+      <a class="btn" href="{{ url_for('day_view', day=next_day.isoformat()) }}">{{ next_day.strftime('%m-%d') }} →</a>
+    </div>
+  </div>
 {% endblock %}
 
+{% block scripts %}
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+{% endblock %}

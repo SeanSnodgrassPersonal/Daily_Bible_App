@@ -13,7 +13,7 @@
 {% block header_actions %}
   <a class="btn icon-btn" href="{{ url_for('calendar_view', ym=prev_month.strftime('%Y-%m')) }}" aria-label="Previous month">←</a>
   <a class="btn icon-btn" href="{{ url_for('calendar_view', ym=next_month.strftime('%Y-%m')) }}" aria-label="Next month">→</a>
-  <a class="btn icon-btn" href="{{ url_for('root') }}" aria-label="Today’s readings">📖</a>
+  <a class="btn icon-btn" href="{{ url_for('day_view', day=today.isoformat()) }}" aria-label="Today’s readings">📖</a>
 {% endblock %}
 
 {% block content %}
