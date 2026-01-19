@@ -4,12 +4,14 @@ import calendar
 import json
 import os
 from dataclasses import dataclass
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional
 
+from zoneinfo import ZoneInfo
+
 import requests
-from flask import Flask, redirect, render_template, url_for, request
+from flask import Flask, render_template, url_for, request, redirect
 
 # ----------------------------
 # Config
@@ -171,10 +173,19 @@ def add_months(d: date, delta_months: int) -> date:
 # ----------------------------
 app = Flask(__name__)
 
+# Hardcode "today" to US Central Time (America/Chicago).
+# This avoids off-by-one-day issues when the server runs in UTC.
+CENTRAL_TZ = ZoneInfo("America/Chicago")
+
+
+def central_today() -> date:
+    return datetime.now(CENTRAL_TZ).date()
+
 
 @app.get("/")
 def root():
-    return redirect(url_for("day_view", day=date.today().isoformat()))
+    # Always land on Central Time "today".
+    return redirect(url_for("day_view", day=central_today().isoformat()))
 
 
 @app.get("/day/<day>")
@@ -182,24 +193,16 @@ def day_view(day: str):
     try:
         d = datetime.strptime(day, "%Y-%m-%d").date()
     except ValueError:
-        d = date.today()
+        d = central_today()
 
     d = clamp_day(d)
 
-    plan_day, passages = get_passages_for_day(d)
-
-    prev_day = clamp_day(d - timedelta(days=1))
-    next_day = clamp_day(d + timedelta(days=1))
-    today = clamp_day(date.today())
+    _, passages = get_passages_for_day(d)
 
     return render_template(
         "day.html",
         day=d,
-        plan_day=plan_day,
         passages=passages,
-        prev_day=prev_day,
-        next_day=next_day,
-        today=today,
         esv_enabled=bool(os.environ.get(ESV_API_KEY_ENV)),
     )
 
@@ -207,7 +210,7 @@ def day_view(day: str):
 @app.get("/calendar")
 def calendar_view():
     ym = request.args.get("ym")
-    today = date.today()
+    today = central_today()
 
     if ym:
         try:

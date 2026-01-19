@@ -2,18 +2,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>{% block title %}Daily Bible{% endblock %}</title>
+    <title>{% block title %}Daily Bible Reading{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <!-- Home Screen / PWA icons -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='icons/apple-touch-icon.png') }}" />
-    <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='icons/icon-192.png') }}" />
-    <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}" />
-
-    <!-- iOS app-like behavior when added to Home Screen -->
-    <meta name="theme-color" content="#000000" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}" />
     {% block head %}{% endblock %}
   </head>
@@ -22,7 +12,7 @@
     <header class="app-header">
       <div class="header-inner">
         <div class="brand">
-          <a href="{{ url_for('day_view', day=today.isoformat()) }}">Daily Bible</a>
+          <a href="{{ url_for('root') }}">Daily Bible Reading</a>
           {% block header_subtitle %}{% endblock %}
         </div>
 
