@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Daily Bible Reading{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='day.css') }}" />
+{% endblock %}
+
+{% block body_attrs %}
+  class="day-page"
+{% endblock %}
+
+{% block header_subtitle %}
+  <span class="subtitle">{{ day.strftime('%A, %B %d, %Y') }}</span>
+{% endblock %}
+
+{% block header_actions %}
+  <a class="btn icon-btn" href="{{ url_for('calendar_view') }}" aria-label="Calendar">📅</a>
+{% endblock %}
+
+{% block content %}
+  {% for p in passages %}
+    <div class="card">
+      <div class="ref">{{ p.reference }}</div>
+      <pre>{{ p.text }}</pre>
+    </div>
+  {% endfor %}
+{% endblock %}
+

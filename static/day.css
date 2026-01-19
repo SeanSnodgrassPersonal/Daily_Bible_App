@@ -1,0 +1,14 @@
+.ref{
+  font-weight: 800;
+  font-size: 1.05rem;
+  margin-bottom: 10px;
+}
+
+pre{
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  line-height: 1.6;
+  font-size: 1.02rem;
+  color: color-mix(in oklab, var(--text) 92%, transparent);
+}
