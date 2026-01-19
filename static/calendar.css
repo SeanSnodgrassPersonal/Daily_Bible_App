@@ -1,20 +1,35 @@
-.legend{
-  margin: 10px 0 12px 0;
-  display:flex;
+.bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 10px;
-  flex-wrap:wrap;
-  align-items:center;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
 }
 
-.pill{
+.title {
+  font-weight: 900;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+}
+
+.legend {
+  margin: 10px 0 12px 0;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.pill {
   padding: 6px 10px;
   border-radius: 999px;
-  background: color-mix(in oklab, var(--card) 86%, transparent);
+  background: #f3f4f6;
   font-size: 0.92rem;
 }
 
-table{
-  width:100%;
+table {
+  width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   table-layout: fixed;
@@ -26,72 +41,87 @@ table{
   box-shadow: var(--shadow);
 }
 
-th{
+th {
   padding: 10px 6px;
   color: var(--muted);
   font-weight: 800;
-  background: color-mix(in oklab, var(--card) 92%, transparent);
+  background: #f9fafb;
   font-size: 0.95rem;
 }
 
-td{
+td {
   border-top: 1px solid var(--border);
   border-right: 1px solid var(--border);
   height: 74px;
   vertical-align: top;
   padding: 0;
-  background: var(--card);
+  background: #fff;
 }
 
-tr td:last-child{ border-right: none; }
+tr td:last-child {
+  border-right: none;
+}
 
-.cell{
+.cell {
   display: block;
   height: 100%;
   padding: 10px;
+  border-radius: 0;
 }
 
-.daynum{ font-weight: 850; }
-
-.other .cell{
-  background: color-mix(in oklab, var(--card) 75%, var(--bg));
-  color: color-mix(in oklab, var(--muted) 70%, transparent);
+.daynum {
+  font-weight: 850;
 }
 
-.disabled .cell{
-  color: color-mix(in oklab, var(--muted) 55%, transparent);
-  background: color-mix(in oklab, var(--card) 85%, transparent);
+.other .cell {
+  background: #fcfcfd;
+  color: #9ca3af;
 }
 
-.clickable .cell{
+.disabled .cell {
+  color: #c0c4cc;
+  background: #fafafa;
+}
+
+.clickable .cell {
   cursor: pointer;
   transition: transform 80ms ease, background 120ms ease;
 }
 
-.clickable .cell:hover{
-  background: color-mix(in oklab, var(--card) 90%, var(--bg));
+.clickable .cell:hover {
+  background: #f9fafb;
 }
 
-.clickable .cell:active{
+.clickable .cell:active {
   transform: translateY(1px);
-  background: color-mix(in oklab, var(--card) 80%, var(--bg));
+  background: #f3f4f6;
 }
 
-.today{
+.today {
   position: relative;
 }
 
-.today::after{
+.today::after {
   content: "";
   position: absolute;
   inset: 0;
-  outline: 2px solid color-mix(in oklab, var(--text) 85%, transparent);
+  outline: 2px solid #111;
   outline-offset: -2px;
   pointer-events: none;
 }
 
-@media (max-width: 520px){
-  th{ font-size: 0.85rem; padding: 9px 4px; }
-  td{ height: 62px; }
-  .cell{ padding: 8px; }
+@media (max-width: 520px) {
+  th {
+    font-size: 0.85rem;
+    padding: 9px 4px;
+  }
+  td {
+    height: 62px;
+  }
+  .cell {
+    padding: 8px;
+  }
+  .title {
+    font-size: 1.15rem;
+  }
 }

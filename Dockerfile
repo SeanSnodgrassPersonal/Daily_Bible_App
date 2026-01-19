@@ -1,18 +1,18 @@
 # syntax=docker/dockerfile:1
 
-FROM python:3.12-slim
+# Use a stable Python version that exists on Docker Hub.
+ARG PYTHON_VERSION=3.12
+
+FROM python:${PYTHON_VERSION}-slim
 
 WORKDIR /code
 
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
 COPY requirements.txt requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY . .
 
 EXPOSE 8080
 
-# Gunicorn production server
-CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0:8080", "app:app"]
+# Fly.io expects the app to listen on internal_port (8080 in fly.toml)
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:8080"]

@@ -1,29 +1,40 @@
 {% extends "base.html" %}
 
-{% block title %}Daily Bible Reading{% endblock %}
+{% block title %}Today's Readings{% endblock %}
 
 {% block head %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='day.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='day.css') }}">
 {% endblock %}
 
 {% block body_attrs %}
-  class="day-page"
-{% endblock %}
-
-{% block header_subtitle %}
-  <span class="subtitle">{{ day.strftime('%A, %B %d, %Y') }}</span>
-{% endblock %}
-
-{% block header_actions %}
-  <a class="btn icon-btn" href="{{ url_for('calendar_view') }}" aria-label="Calendar">📅</a>
+  data-prev-url="{{ url_for('day_view', day=prev_day.isoformat()) }}"
+  data-next-url="{{ url_for('day_view', day=next_day.isoformat()) }}"
 {% endblock %}
 
 {% block content %}
+  <div class="header">
+    <h1>Today’s Readings</h1>
+    <a class="btn" href="{{ url_for('calendar_view') }}">📅 Calendar</a>
+  </div>
+
+  <p class="sub">{{ day.strftime('%A, %B %d, %Y') }}</p>
+
   {% for p in passages %}
     <div class="card">
       <div class="ref">{{ p.reference }}</div>
       <pre>{{ p.text }}</pre>
     </div>
   {% endfor %}
+
+  <div class="daypicker-wrap" aria-label="Day navigation">
+    <div class="daypicker">
+      <a class="btn" href="{{ url_for('day_view', day=prev_day.isoformat()) }}">← {{ prev_day.strftime('%m-%d') }}</a>
+      <a class="btn today" href="{{ url_for('day_view', day=today.isoformat()) }}">Today</a>
+      <a class="btn" href="{{ url_for('day_view', day=next_day.isoformat()) }}">{{ next_day.strftime('%m-%d') }} →</a>
+    </div>
+  </div>
 {% endblock %}
 
+{% block scripts %}
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+{% endblock %}

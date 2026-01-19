@@ -3,23 +3,20 @@
 {% block title %}Calendar{% endblock %}
 
 {% block head %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='calendar.css') }}" />
-{% endblock %}
-
-{% block header_subtitle %}
-  <span class="subtitle">{{ current.strftime('%B %Y') }}</span>
-{% endblock %}
-
-{% block header_actions %}
-  <a class="btn icon-btn" href="{{ url_for('calendar_view', ym=prev_month.strftime('%Y-%m')) }}" aria-label="Previous month">←</a>
-  <a class="btn icon-btn" href="{{ url_for('calendar_view', ym=next_month.strftime('%Y-%m')) }}" aria-label="Next month">→</a>
-  <a class="btn icon-btn" href="{{ url_for('root') }}" aria-label="Today’s readings">📖</a>
+  <link rel="stylesheet" href="{{ url_for('static', filename='calendar.css') }}">
 {% endblock %}
 
 {% block content %}
+  <div class="bar">
+    <a class="btn" href="{{ url_for('calendar_view', ym=prev_month.strftime('%Y-%m')) }}">← Prev</a>
+    <div class="title">{{ current.strftime('%B %Y') }}</div>
+    <a class="btn" href="{{ url_for('calendar_view', ym=next_month.strftime('%Y-%m')) }}">Next →</a>
+  </div>
+
   <div class="legend muted">
     <span class="pill">Tap a day to open reading</span>
     <span class="pill">Outlined = today</span>
+    <a class="btn" href="{{ url_for('day_view', day=today.isoformat()) }}">Today’s Readings</a>
   </div>
 
   <table aria-label="Calendar">
