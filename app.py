@@ -19,6 +19,27 @@ from flask import Flask, render_template, url_for, request, redirect
 BASE_DIR = Path(__file__).resolve().parent
 PLAN_PATH = BASE_DIR / "reading_plan.json"
 
+# Guardrails
+#
+# These are used to disable calendar dates outside an allowed window.
+# Default is a very wide range (effectively "no clamp") so the app always opens
+# the current day in Central time.
+# You can override with env vars MIN_DAY and MAX_DAY (YYYY-MM-DD).
+def _env_date(name: str):
+    v = os.environ.get(name)
+    if not v:
+        return None
+    try:
+        return datetime.strptime(v, "%Y-%m-%d").date()
+    except Exception:
+        return None
+
+_MIN_ENV = _env_date("MIN_DAY")
+_MAX_ENV = _env_date("MAX_DAY")
+
+MIN_DAY = _MIN_ENV or date(1970, 1, 1)
+MAX_DAY = _MAX_ENV or date(2100, 12, 31)
+
 # ESV API
 ESV_API_URL = "https://api.esv.org/v3/passage/text/"
 ESV_API_KEY_ENV = "ESV_API_KEY"
@@ -41,9 +62,9 @@ class Passage:
 # ----------------------------
 def load_plan() -> Dict[int, List[str]]:
     if not PLAN_PATH.exists():
-        raise FileNotFoundError(
-            f"Missing reading plan file at {PLAN_PATH}. Put reading_plan.json next to app.py."
-        )
+        # Don’t crash the whole app if the plan file is missing;
+        # show a friendly placeholder instead.
+        return {}
     data = json.loads(PLAN_PATH.read_text(encoding="utf-8"))
 
     plan: Dict[int, List[str]] = {}
