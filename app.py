@@ -19,26 +19,9 @@ from flask import Flask, render_template, url_for, request, redirect
 BASE_DIR = Path(__file__).resolve().parent
 PLAN_PATH = BASE_DIR / "reading_plan.json"
 
-# Guardrails
-#
-# These are used to disable calendar dates outside an allowed window.
-# Default is a very wide range (effectively "no clamp") so the app always opens
-# the current day in Central time.
-# You can override with env vars MIN_DAY and MAX_DAY (YYYY-MM-DD).
-def _env_date(name: str):
-    v = os.environ.get(name)
-    if not v:
-        return None
-    try:
-        return datetime.strptime(v, "%Y-%m-%d").date()
-    except Exception:
-        return None
-
-_MIN_ENV = _env_date("MIN_DAY")
-_MAX_ENV = _env_date("MAX_DAY")
-
-MIN_DAY = _MIN_ENV or date(1970, 1, 1)
-MAX_DAY = _MAX_ENV or date(2100, 12, 31)
+# Guardrails (keep while developing; remove later if you want)
+MIN_DAY = date(2026, 1, 1)
+MAX_DAY = date(2026, 12, 31)
 
 # ESV API
 ESV_API_URL = "https://api.esv.org/v3/passage/text/"
@@ -62,9 +45,9 @@ class Passage:
 # ----------------------------
 def load_plan() -> Dict[int, List[str]]:
     if not PLAN_PATH.exists():
-        # Don’t crash the whole app if the plan file is missing;
-        # show a friendly placeholder instead.
-        return {}
+        raise FileNotFoundError(
+            f"Missing reading plan file at {PLAN_PATH}. Put reading_plan.json next to app.py."
+        )
     data = json.loads(PLAN_PATH.read_text(encoding="utf-8"))
 
     plan: Dict[int, List[str]] = {}
@@ -192,16 +175,31 @@ app = Flask(__name__)
 
 # Hardcode "today" to US Central Time (America/Chicago).
 # This avoids off-by-one-day issues when the server runs in UTC.
-CENTRAL_TZ = ZoneInfo("America/Chicago")
+try:
+    CENTRAL_TZ = ZoneInfo("America/Chicago")
+except Exception:
+    CENTRAL_TZ = None
 
 
 def central_today() -> date:
-    return datetime.now(CENTRAL_TZ).date()
+    """Return today's date in US Central time.
+
+    Falls back to the server's local date if timezone data is unavailable.
+    (Installing the `tzdata` package in requirements is recommended.)
+    """
+    if CENTRAL_TZ is not None:
+        return datetime.now(CENTRAL_TZ).date()
+    return datetime.now().date()
 
 
 @app.get("/")
 def root():
     # Always land on Central Time "today".
+    return redirect(url_for("day_view", day=central_today().isoformat()))
+
+
+@app.get("/today")
+def today_redirect():
     return redirect(url_for("day_view", day=central_today().isoformat()))
 
 
