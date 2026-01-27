@@ -19,10 +19,6 @@ from flask import Flask, render_template, url_for, request, redirect
 BASE_DIR = Path(__file__).resolve().parent
 PLAN_PATH = BASE_DIR / "reading_plan.json"
 
-# Guardrails (keep while developing; remove later if you want)
-MIN_DAY = date(2026, 1, 1)
-MAX_DAY = date(2026, 12, 31)
-
 # ESV API
 ESV_API_URL = "https://api.esv.org/v3/passage/text/"
 ESV_API_KEY_ENV = "ESV_API_KEY"
@@ -192,7 +188,7 @@ def root():
 def day_view(day: str):
     try:
         d = datetime.strptime(day, "%Y-%m-%d").date()
-    except ValueError:
+    except Exception:
         d = central_today()
 
     d = clamp_day(d)
