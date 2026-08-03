@@ -4,7 +4,7 @@ import calendar
 import json
 import os
 from dataclasses import dataclass
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional
 
@@ -214,11 +214,18 @@ def day_view(day: str):
 
     _, passages = get_passages_for_day(d)
 
+    prev_day = d - timedelta(days=1)
+    next_day = d + timedelta(days=1)
+
     return render_template(
         "day.html",
         day=d,
         passages=passages,
         esv_enabled=bool(os.environ.get(ESV_API_KEY_ENV)),
+        prev_day=prev_day,
+        next_day=next_day,
+        prev_in_bounds=(prev_day >= MIN_DAY),
+        next_in_bounds=(next_day <= MAX_DAY),
     )
 
 
