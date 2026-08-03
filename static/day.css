@@ -12,3 +12,31 @@ pre{
   font-size: 1.02rem;
   color: color-mix(in oklab, var(--text) 92%, transparent);
 }
+
+.day-nav{
+  display: flex;
+  gap: 10px;
+  margin: 22px 0 8px;
+}
+
+.day-nav-btn{
+  flex: 1 1 0;
+  gap: 8px;
+  font-size: 0.92rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.day-nav-next{
+  justify-content: flex-end;
+}
+
+.day-nav-btn[aria-disabled="true"]{
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+@media (max-width: 420px){
+  .day-nav-btn{ font-size: 0.85rem; padding: 10px 8px; }
+}

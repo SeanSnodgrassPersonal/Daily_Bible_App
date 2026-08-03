@@ -25,5 +25,31 @@
       <pre>{{ p.text }}</pre>
     </div>
   {% endfor %}
+
+  <nav class="day-nav" aria-label="Day navigation">
+    {% if prev_in_bounds %}
+      <a class="btn day-nav-btn day-nav-prev" href="{{ url_for('day_view', day=prev_day.isoformat()) }}">
+        <span aria-hidden="true">←</span>
+        <span>{{ prev_day.strftime('%b %-d, %Y') }}</span>
+      </a>
+    {% else %}
+      <span class="btn day-nav-btn day-nav-prev" aria-disabled="true">
+        <span aria-hidden="true">←</span>
+        <span>{{ prev_day.strftime('%b %-d, %Y') }}</span>
+      </span>
+    {% endif %}
+
+    {% if next_in_bounds %}
+      <a class="btn day-nav-btn day-nav-next" href="{{ url_for('day_view', day=next_day.isoformat()) }}">
+        <span>{{ next_day.strftime('%b %-d, %Y') }}</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    {% else %}
+      <span class="btn day-nav-btn day-nav-next" aria-disabled="true">
+        <span>{{ next_day.strftime('%b %-d, %Y') }}</span>
+        <span aria-hidden="true">→</span>
+      </span>
+    {% endif %}
+  </nav>
 {% endblock %}
 
